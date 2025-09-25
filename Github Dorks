@@ -1,4 +1,4 @@
-### **Credentials & Hardcoded Secrets**	
+**Credentials & Hardcoded Secrets**
 org:[TARGET_ORG] filename:.env "DB_PASSWORD"	– (Purpose: Hunts for database credentials in `.env` files, commonly used in local/dev environments but accidentally committed.)
 org:[TARGET_ORG] extension:.p12 OR extension:.pfx	– (Purpose: Identifies leaked PKCS#12/PFX certificate bundles, which often contain private keys and CA chains.)
 org:[TARGET_ORG] filename:secrets.yaml OR filename:secrets.yml "token:"	– (Purpose: Targets Kubernetes or Helm secrets files containing service account tokens or OAuth credentials.)
@@ -16,7 +16,7 @@ org:[TARGET_ORG] path:*.conf "ldap_bind_password"	- (Purpose: Reveals LDAP bind 
 org:[TARGET_ORG] path:*.ini "redis_password"	- (Purpose: Exposes Redis database passwords in INI configuration files.)
 org:[TARGET_ORG] path:tests/* "test_jwt_token"	- (Purpose: Identifies leaked JWT tokens in test suite files that could be valid in production.)
 	
-### **Infrastructure-as-Code (IaC) & CI/CD Misconfigurations**	
+**Infrastructure-as-Code (IaC) & CI/CD Misconfigurations**	
 org:[TARGET_ORG] path:*.tf "sensitive = true"	– (Purpose: Flags Terraform resources explicitly marked sensitive—often a red flag for hardcoded secrets nearby.)
 org:[TARGET_ORG] filename:main.tf OR filename:variables.tf "default = \""	– (Purpose: Identifies Terraform variable defaults that may contain placeholder secrets accidentally left in code.)
 org:[TARGET_ORG] path:.github/workflows/ language:yaml "secrets."	– (Purpose: Maps usage of GitHub Actions secrets to assess potential secret sprawl or over-permissioned workflows.)
@@ -53,7 +53,7 @@ org:[TARGET_ORG] path:*.txt "vpn_endpoint"	- (Purpose: Finds VPN or internal net
 org:[TARGET_ORG] path:docs/* "api_gateway_internal"	- (Purpose: Locates documentation referencing internal API gateways.)
 	
 	
-### **Configuration Files & Service Discovery**	
+**Configuration Files & Service Discovery**	
 org:[TARGET_ORG] filename:consul.json OR filename:vault.hcl`	– (Purpose: Identifies HashiCorp Consul or Vault config files that may contain bootstrap tokens or unseal keys.)
 org:[TARGET_ORG] path:config/ extension:.yaml "hosts:"	– (Purpose: Searches YAML configs in standard config directories for lists of internal hosts or service endpoints.)
 org:[TARGET_ORG] filename:docker-compose.yml "environment:"	– (Purpose: Scans Docker Compose files for environment variables that may contain credentials or internal URLs.)
@@ -72,7 +72,7 @@ org:[TARGET_ORG] filename:.netrc "password"	- (Purpose: Finds netrc file passwor
 org:[TARGET_ORG] path:*.json "service_discovery_url"	- (Purpose: Spots URLs for service discovery in JSON configs.)
 	
 	
-### **Mobile & Application-Specific Leaks**	
+**Mobile & Application-Specific Leaks**	
 org:[TARGET_ORG] extension:.mobileconfig	– (Purpose: Detects iOS configuration profiles, which may contain Wi-Fi credentials, certificates, or MDM enrollment tokens.)
 org:[TARGET_ORG] path:android/ filename:local.properties "sdk.dir"	– (Purpose: While usually benign, sometimes paired with leaked keystore passwords in adjacent files—use as a pivot point.)
 org:[TARGET_ORG] filename:google-services.json "client_id"	– (Purpose: Finds Firebase/Google OAuth client IDs and API keys used in Android/iOS apps—can be abused for quota exhaustion or data access.)
@@ -90,7 +90,7 @@ org:[TARGET_ORG] path:*.kt "push_notification_key"	- (Purpose: Spots push notifi
 org:[TARGET_ORG] filename:AndroidManifest.xml "permission" "internal"	- (Purpose: Detects custom internal permissions in Android manifests.)
 org:[TARGET_ORG] path:*.storyboard "api_endpoint"	- (Purpose: Locates API endpoints embedded in iOS storyboard files.)
 	
-### **Bonus: Advanced & Obscure Vectors**	
+**Bonus: Advanced & Obscure Vectors**	
 org:[TARGET_ORG] filename:.kube/config	– (Purpose: Directly hunts for committed Kubernetes kubeconfig files—equivalent to handing over cluster admin access.)
 org:[TARGET_ORG] "-----BEGIN CERTIFICATE-----" extension:.crt path:test/	– (Purpose: Finds certificates in test directories that may be valid for internal PKI or staging environments.)
 org:[TARGET_ORG] filename:package-lock.json "resolved": "https://internal-nexus"	– (Purpose: Exposes internal artifact repository URLs, revealing build infrastructure and potential auth bypass surfaces.)
@@ -98,7 +98,7 @@ org:[TARGET_ORG] language:javascript "process.env." path:src/	– (Purpose: Flag
 org:[TARGET_ORG] filename:.sops.yaml OR filename:.sops.json	– (Purpose: Detects Mozilla SOPS config files; if keys are also leaked, encrypted secrets can be decrypted.)
 	
 	
-* **Private Keys & Certificates (Insightful category from X discussions on key exposures):**	
+**Private Keys & Certificates (Insightful category from X discussions on key exposures):**	
 org:[TARGET_ORG] extension:pem "private"	- (Purpose: Searches for private PEM keys in certificate files.)
 org:[TARGET_ORG] extension:p12 "password"	- (Purpose: Identifies password-protected PKCS12 certificate files.)
 org:[TARGET_ORG] filename:id_rsa	- (Purpose: Finds SSH private keys named id_rsa.)
@@ -110,7 +110,7 @@ org:[TARGET_ORG] path:*.jks "keystorePass"	- (Purpose: Identifies Java keystore 
 org:[TARGET_ORG] filename:client.pem	- (Purpose: Locates client-side PEM certificates with potential keys.)
 org:[TARGET_ORG] extension:key "BEGIN RSA PRIVATE KEY"	- (Purpose: Finds raw private key files starting with standard headers.)
 	
-* **Database & SQL Leaks (Insightful category from X posts on dumps and credentials):**	
+**Database & SQL Leaks (Insightful category from X posts on dumps and credentials):**	
 org:[TARGET_ORG] extension:sql "mysql dump"	- (Purpose: Searches for MySQL database dumps containing schema and data.)
 org:[TARGET_ORG] path:*.sql "password"	- (Purpose: Identifies SQL scripts with hardcoded passwords.)
 org:[TARGET_ORG] filename:dump.sql "users"	- (Purpose: Detects SQL dumps exposing user tables.)
